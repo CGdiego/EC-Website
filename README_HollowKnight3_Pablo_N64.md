@@ -135,7 +135,7 @@ Este projeto foi desenvolvido para demonstrar:
 
 ## Créditos
 
-Projeto desenvolvido por **CG**.
+Projeto desenvolvido por **Diego**.
 
 Algumas imagens e referências visuais pertencem aos seus respectivos autores e foram utilizadas apenas para fins educacionais.
 

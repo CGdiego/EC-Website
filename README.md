@@ -93,13 +93,13 @@ EC-Website/
 
 ## Funcionalidades favoritas
 
-🕹 Código Konami escondido
-🎵 Trilha sonora retrô com controle de volume
-🖼 Lightbox na galeria com autoplay
-🛒 Carrinho de compras com cupom de desconto
-📺 Trailer incorporado
-📦 Estoque animado
-🧠 Quiz de personalidade do inseto poligonal
+🕹 Código Konami escondido\
+🎵 Trilha sonora retrô com controle de volume\
+🖼 Lightbox na galeria com autoplay\
+🛒 Carrinho de compras com cupom de desconto\
+📺 Trailer incorporado\
+📦 Estoque animado\
+🧠 Quiz de personalidade do inseto poligonal\
 🎨 Troca de tema CRT Verde / Neon Azul
 
 ---

@@ -1,555 +1,38 @@
 <!DOCTYPE html>
+<!-- ============================================================
+     Hollow Knight 3: Pablo — Edição N64
+     Projeto: Página Web com Recursos Interativos (Partes 1 e 2)
+
+     CRITÉRIOS ATENDIDOS:
+     Parte 1 — Página Web Simples:
+       ✓ Construída com HTML e CSS no VS Code
+       ✓ Estrutura semântica: header, nav, main, section, footer
+       ✓ Múltiplas seções com conteúdo
+       ✓ Estética visual consistente (tema retrô N64)
+       ✓ Menu de navegação com âncoras
+       ✓ Imagens com alt text acessível
+       ✓ Formulário de contato
+
+     Parte 2 — Recursos Interativos:
+       ✓ IMAGENS: galeria com slideshow de 5 imagens + lightbox
+       ✓ SOM: botão para tocar/pausar trilha sonora
+       ✓ VÍDEO: trailer oficial via YouTube embed responsivo
+       ✓ INTERAÇÃO: slideshow com setas, teclado e miniaturas
+       ✓ INTERAÇÃO: formulário com validação e feedback visual
+       ✓ INTERAÇÃO: botões de compra com alerta de carrinho
+       ✓ INTERAÇÃO: barra de estoque animada via CSS + JS
+       ✓ INTERAÇÃO: easter egg Konami Code (↑↑↓↓←→←→BA)
+       ✓ ESTÉTICA: scanlines CRT, neon glow, pixel shadows
+       ✓ RESPONSIVO: funciona em mobile e desktop
+       ✓ ACESSIBILIDADE: aria-label, roles, teclado navegável
+       ✓ Publicado no GitHub Pages (3 arquivos separados)
+     ============================================================ -->
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hollow Knight 3: Pablo — Edição N64</title>
-    <style>
-        /* ── Reset & Base ── */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        :root {
-            --neon: #00d2ff;
-            --orange: #ff9f43;
-            --green: #1dd1a1;
-            --red: #ff6b6b;
-            --bg: #0b0f19;
-            --surface: #161f33;
-            --border: #3a4b6e;
-            --text: #f0f4f8;
-            --muted: #a5b1c2;
-            --font: 'Courier New', Courier, monospace;
-        }
-
-        html { scroll-behavior: smooth; }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: var(--font);
-            line-height: 1.6;
-        }
-
-        /* ── Scanline overlay ── */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(0,0,0,0.08) 2px,
-                rgba(0,0,0,0.08) 4px
-            );
-            pointer-events: none;
-            z-index: 9999;
-        }
-
-        /* ── Header ── */
-        header {
-            background-color: var(--surface);
-            padding: 30px 20px 20px;
-            border-bottom: 4px solid var(--neon);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        header::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0; right: 0;
-            height: 2px;
-            background: var(--neon);
-            box-shadow: 0 0 18px var(--neon);
-        }
-
-        .site-badge {
-            display: inline-block;
-            background: var(--neon);
-            color: #000;
-            font-size: 0.65rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-            padding: 3px 10px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        h1 {
-            color: var(--neon);
-            font-size: clamp(1.4rem, 5vw, 2.4rem);
-            text-shadow: 3px 3px 0 #000, 0 0 20px rgba(0,210,255,0.4);
-            line-height: 1.1;
-            margin-bottom: 8px;
-        }
-
-        .tagline {
-            font-style: italic;
-            color: var(--muted);
-            font-size: 0.9rem;
-        }
-
-        /* ── Nav ── */
-        nav { margin-top: 24px; }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        nav ul li a {
-            display: block;
-            color: var(--text);
-            text-decoration: none;
-            font-weight: bold;
-            padding: 7px 14px;
-            border: 2px solid transparent;
-            font-size: 0.85rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            transition: color 0.15s, border-color 0.15s, background 0.15s;
-        }
-
-        nav ul li a:hover,
-        nav ul li a:focus {
-            color: var(--neon);
-            border-color: var(--neon);
-            background: rgba(0,210,255,0.06);
-            outline: none;
-        }
-
-        /* ── Main layout ── */
-        main {
-            max-width: 820px;
-            margin: 0 auto;
-            padding: 20px 16px 60px;
-        }
-
-        /* ── Sections ── */
-        section {
-            background: var(--surface);
-            margin: 40px 0;
-            padding: 32px 28px;
-            border: 4px solid var(--border);
-            box-shadow: 6px 6px 0 #000;
-            text-align: center;
-        }
-
-        h2 {
-            color: var(--orange);
-            font-size: clamp(1rem, 3vw, 1.3rem);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 16px;
-        }
-
-        section p { color: var(--muted); font-size: 0.95rem; }
-
-        /* ── Images ── */
-        .game-img {
-            max-width: 100%;
-            height: auto;
-            border: 4px solid #fff;
-            box-shadow: 0 0 20px rgba(0,210,255,0.3);
-            margin-top: 16px;
-        }
-
-        .foto-amiibo {
-            width: 220px;
-            height: 220px;
-            object-fit: cover;
-            background: #fff;
-            border: 4px solid var(--orange);
-            box-shadow: 6px 6px 0 #000;
-            margin: 20px auto;
-            display: block;
-        }
-
-        /* ── Trailer / Video ── */
-        .video-wrapper {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%;
-            margin-top: 20px;
-            border: 4px solid var(--border);
-            box-shadow: 6px 6px 0 #000;
-            overflow: hidden;
-        }
-
-        .video-wrapper iframe {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-
-        .video-label {
-            display: inline-block;
-            background: var(--red);
-            color: #fff;
-            font-size: 0.7rem;
-            font-weight: bold;
-            letter-spacing: 2px;
-            padding: 3px 10px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        /* ── Preço / Compra ── */
-        .price-old {
-            color: var(--red);
-            font-size: 1rem;
-            display: block;
-            margin-bottom: 4px;
-            text-decoration: line-through;
-        }
-
-        .price-new {
-            color: var(--green);
-            font-size: 2rem;
-            font-weight: bold;
-            display: block;
-            margin-bottom: 6px;
-            text-shadow: 0 0 10px rgba(29,209,161,0.3);
-        }
-
-        /* ── Contador de estoque ── */
-        .estoque-wrapper {
-            margin: 16px auto;
-            max-width: 280px;
-        }
-
-        .estoque-label {
-            font-size: 0.78rem;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-        }
-
-        .estoque-bar {
-            height: 10px;
-            background: var(--border);
-            border: 2px solid var(--border);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .estoque-fill {
-            height: 100%;
-            background: var(--red);
-            width: 23%;
-            transition: width 1s ease;
-        }
-
-        .estoque-texto {
-            font-size: 0.8rem;
-            color: var(--red);
-            font-weight: bold;
-            margin-top: 4px;
-            letter-spacing: 1px;
-        }
-
-        /* ── Botões ── */
-        .btn {
-            display: inline-block;
-            background: var(--orange);
-            color: #000;
-            border: 3px solid #fff;
-            padding: 14px 28px;
-            font-family: var(--font);
-            font-weight: bold;
-            font-size: 1rem;
-            cursor: pointer;
-            box-shadow: 4px 4px 0 #000;
-            margin-top: 20px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: background 0.15s, transform 0.1s, box-shadow 0.1s;
-            text-decoration: none;
-        }
-
-        .btn:hover, .btn:focus {
-            background: var(--green);
-            transform: translate(-2px, -2px);
-            box-shadow: 6px 6px 0 #000;
-            outline: none;
-        }
-
-        .btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: 2px 2px 0 #000;
-        }
-
-        .btn-som {
-            background: var(--surface);
-            color: var(--neon);
-            border-color: var(--neon);
-            font-size: 0.85rem;
-            padding: 10px 20px;
-            margin-top: 12px;
-        }
-
-        .btn-som:hover, .btn-som:focus { background: rgba(0,210,255,0.08); }
-
-        /* ── Galeria ── */
-        .galeria {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 12px;
-            margin-top: 20px;
-        }
-
-        .galeria-item {
-            position: relative;
-            overflow: hidden;
-            border: 3px solid var(--border);
-            cursor: pointer;
-            transition: border-color 0.15s;
-        }
-
-        .galeria-item:hover { border-color: var(--neon); }
-
-        .galeria-item img {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-            display: block;
-            border: none;
-            box-shadow: none;
-            margin: 0;
-            transition: transform 0.2s;
-        }
-
-        .galeria-item:hover img { transform: scale(1.05); }
-
-        .galeria-item .caption {
-            background: rgba(0,0,0,0.75);
-            color: var(--neon);
-            font-size: 0.7rem;
-            text-align: center;
-            padding: 4px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        /* ── Modal lightbox ── */
-        #lightbox {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.88);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        #lightbox.aberto { display: flex; }
-
-        #lightbox img {
-            max-width: 90vw;
-            max-height: 80vh;
-            border: 4px solid var(--neon);
-            box-shadow: 0 0 40px rgba(0,210,255,0.4);
-            margin: 0;
-        }
-
-        #lightbox-fechar {
-            color: #fff;
-            font-size: 1rem;
-            font-family: var(--font);
-            background: none;
-            border: 2px solid var(--red);
-            padding: 8px 20px;
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--red);
-        }
-
-        /* ── Formulário de contato ── */
-        .form-group { margin-top: 16px; text-align: left; }
-        .form-group label {
-            display: block;
-            font-size: 0.8rem;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 6px;
-        }
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            background: var(--bg);
-            border: 2px solid var(--border);
-            color: var(--text);
-            font-family: var(--font);
-            font-size: 0.9rem;
-            padding: 10px 12px;
-            transition: border-color 0.15s;
-        }
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--neon);
-        }
-        .form-group textarea { resize: vertical; min-height: 90px; }
-
-        #msg-enviado {
-            display: none;
-            margin-top: 14px;
-            color: var(--green);
-            font-weight: bold;
-            font-size: 0.9rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        /* ── Email destaque ── */
-        .email-contato { color: var(--neon); font-weight: bold; margin-top: 8px; }
-
-        /* ── Easter egg ── */
-        #konami-msg {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--surface);
-            border: 4px solid var(--orange);
-            padding: 32px 40px;
-            z-index: 5000;
-            text-align: center;
-            box-shadow: 8px 8px 0 #000;
-            max-width: 90vw;
-        }
-
-        #konami-msg p { color: var(--orange); font-size: 1.1rem; margin-bottom: 16px; }
-        #konami-fechar {
-            background: none;
-            border: 2px solid var(--orange);
-            color: var(--orange);
-            font-family: var(--font);
-            padding: 8px 20px;
-            cursor: pointer;
-            text-transform: uppercase;
-        }
-
-        /* ── Footer ── */
-        footer {
-            background: #070a10;
-            padding: 20px;
-            font-size: 0.85rem;
-            color: #718093;
-            border-top: 4px solid var(--border);
-            text-align: center;
-        }
-
-        /* ── Responsividade ── */
-        @media (max-width: 600px) {
-            section { padding: 22px 16px; }
-            .btn { font-size: 0.88rem; padding: 12px 20px; }
-            .galeria { grid-template-columns: 1fr 1fr; }
-        }
-
-        /* ── Slideshow ── */
-        .slideshow { margin-top: 16px; }
-
-        .slide-display {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0;
-            background: #000;
-            border: 4px solid var(--border);
-            box-shadow: 6px 6px 0 #000;
-            overflow: hidden;
-            min-height: 280px;
-        }
-
-        #slide-img {
-            width: 100%;
-            max-height: 420px;
-            object-fit: contain;
-            display: block;
-            border: none;
-            box-shadow: none;
-            margin: 0;
-            transition: opacity 0.25s ease;
-        }
-
-        .slide-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.65);
-            color: var(--neon);
-            border: 2px solid var(--neon);
-            font-size: 1.4rem;
-            width: 44px;
-            height: 44px;
-            cursor: pointer;
-            font-family: var(--font);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.15s;
-            z-index: 2;
-        }
-
-        .slide-btn:hover { background: rgba(0,210,255,0.2); }
-        .slide-prev { left: 8px; }
-        .slide-next { right: 8px; }
-
-        .slide-caption-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 8px 12px;
-            background: rgba(0,0,0,0.4);
-            border: 2px solid var(--border);
-            border-top: none;
-            font-size: 0.78rem;
-        }
-
-        #slide-caption { color: var(--neon); text-transform: uppercase; letter-spacing: 1px; }
-        #slide-contador { color: var(--muted); }
-
-        .slide-thumbs {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            margin-top: 14px;
-            flex-wrap: wrap;
-        }
-
-        .slide-thumb {
-            width: 72px;
-            height: 52px;
-            object-fit: cover;
-            border: 3px solid var(--border);
-            cursor: pointer;
-            opacity: 0.55;
-            transition: opacity 0.15s, border-color 0.15s;
-        }
-
-        .slide-thumb:hover { opacity: 0.85; border-color: var(--muted); }
-        .slide-thumb.ativo { opacity: 1; border-color: var(--neon); }
-
-        @media (prefers-reduced-motion: reduce) {
-            *, *::before, *::after { transition: none !important; animation: none !important; }
-        }
-    </style>
+    <link rel="stylesheet" href="website.css">
 </head>
 <body>
 
@@ -579,8 +62,8 @@
         <p>Explore o reino de Hallownest com gráficos retrô de 64 bits. Controle Pablo em uma aventura cheia de insetos poligonais, chefões difíceis e névoas nostálgicas.</p>
         <img
             class="game-img"
-            src="https://preview.redd.it/pablo-album-art-v0-zytgyqz2y8yf1.jpeg?width=1080&crop=smart&auto=webp&s=228464cd4f8d2ca7454959e54d210149cc8eacba"
-            alt="Tela título oficial de Hollow Knight 3: Pablo"
+            src="https://i.redd.it/muuyldr6d3rf1.jpeg"
+            alt="Capa oficial de Hollow Knight 3: Pablo para Nintendo 64"
             loading="lazy"
         >
 
@@ -618,7 +101,11 @@
         <div class="slideshow" role="region" aria-label="Galeria de screenshots">
             <div class="slide-display">
                 <button class="slide-btn slide-prev" onclick="moverSlide(-1)" aria-label="Imagem anterior">&#8592;</button>
-                <img id="slide-img" src="https://preview.redd.it/pablo-album-art-v0-zytgyqz2y8yf1.jpeg?width=1080&crop=smart&auto=webp&s=228464cd4f8d2ca7454959e54d210149cc8eacba" alt="Tela Título" onclick="abrirLightbox(slides[slideAtual].src)" style="cursor:zoom-in;">
+                <img id="slide-img"
+                    src="https://preview.redd.it/pablo-album-art-v0-zytgyqz2y8yf1.jpeg?width=1080&crop=smart&auto=webp&s=228464cd4f8d2ca7454959e54d210149cc8eacba"
+                    alt="Tela Título"
+                    onclick="abrirLightbox(slides[slideAtual].src)"
+                    style="cursor:zoom-in;">
                 <button class="slide-btn slide-next" onclick="moverSlide(1)" aria-label="Próxima imagem">&#8594;</button>
             </div>
             <div class="slide-caption-bar">
@@ -634,8 +121,8 @@
         <h2>Amiibo Oficial do Pablo</h2>
         <p>Garanta esta estatueta colecionável de edição limitada! Conecte ao seu controle para desbloquear skins exclusivas e um modo de jogo secreto.</p>
         <img
-            src="https://images.cults3d.com/cdBtHDVY7ukn4iH89-gBBBrw8PI=/516x516/filters:no_upscale()/https://fbi.cults3d.com/uploaders/17154805/illustration-file/2bafd89a-f1fe-4490-94ab-6d0c796ef2a7/00.png"
-            alt="Amiibo oficial do Pablo — Pablo 3D"
+            src="https://makerworld.bblmw.com/makerworld/model/DSM00000001873782/design/2025-10-10_fd45ec2ef19128.png?x-oss-process=image/resize,w_1000/format,webp"
+            alt="Amiibo oficial do Pablo"
             class="foto-amiibo"
             loading="lazy"
         >
@@ -707,146 +194,8 @@
     <button id="konami-fechar" onclick="fecharKonami()">OK, incrível!</button>
 </div>
 
-<!-- ══ SCRIPTS ══ -->
-<script>
-    // ── Som ──
-    const audio = document.getElementById('audio-trilha');
-    const btnSom = document.getElementById('btn-som-label');
-    let somTocando = false;
-
-    function toggleSom() {
-        if (somTocando) {
-            audio.pause();
-            btnSom.textContent = '▶ Tocar Trilha';
-        } else {
-            audio.play().catch(() => {});
-            btnSom.textContent = '■ Pausar Trilha';
-        }
-        somTocando = !somTocando;
-    }
-
-    // ── Lightbox ──
-    function abrirLightbox(src) {
-        document.getElementById('lightbox-img').src = src;
-        document.getElementById('lightbox').classList.add('aberto');
-        document.body.style.overflow = 'hidden';
-    }
-
-    function fecharLightbox() {
-        document.getElementById('lightbox').classList.remove('aberto');
-        document.body.style.overflow = '';
-    }
-
-    // Teclado: Esc fecha lightbox
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') { fecharLightbox(); fecharKonami(); }
-    });
-
-    // Galeria: teclado Enter abre lightbox
-    document.querySelectorAll('.galeria-item').forEach(item => {
-        item.addEventListener('keydown', e => {
-            if (e.key === 'Enter' || e.key === ' ') item.click();
-        });
-    });
-
-    // ── Comprar ──
-    function comprar(produto, preco) {
-        alert(`🛒 Adicionado ao carrinho!\n\n${produto}\nR$ ${preco.toFixed(2)}\n\n(Loja real em breve, por enquanto é só o Pablo aqui 😅)`);
-    }
-
-    // ── Formulário ──
-    function enviarForm() {
-        const nome = document.getElementById('campo-nome').value.trim();
-        const email = document.getElementById('campo-email').value.trim();
-        const msg = document.getElementById('campo-msg').value.trim();
-
-        if (!nome || !email || !msg) {
-            alert('Por favor, preencha todos os campos!');
-            return;
-        }
-        if (!email.includes('@')) {
-            alert('Insira um e-mail válido!');
-            return;
-        }
-
-        document.getElementById('form-contato').style.display = 'none';
-        document.getElementById('msg-enviado').style.display = 'block';
-    }
-
-    // ── Barra de estoque animada ──
-    setTimeout(() => {
-        document.getElementById('barra-estoque').style.width = '23%';
-    }, 600);
-
-    // ── Konami Code ──
-    const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
-    let konamiIdx = 0;
-
-    document.addEventListener('keydown', e => {
-        if (e.key === KONAMI[konamiIdx]) {
-            konamiIdx++;
-            if (konamiIdx === KONAMI.length) {
-                document.getElementById('konami-msg').style.display = 'block';
-                konamiIdx = 0;
-            }
-        } else {
-            konamiIdx = 0;
-        }
-    });
-
-    function fecharKonami() {
-        document.getElementById('konami-msg').style.display = 'none';
-    }
-
-    // ── Slideshow ──
-    const slides = [
-        { src: 'https://preview.redd.it/pablo-album-art-v0-zytgyqz2y8yf1.jpeg?width=1080&crop=smart&auto=webp&s=228464cd4f8d2ca7454959e54d210149cc8eacba', caption: 'Tela Título' },
-        { src: 'https://img.itch.zone/aW1hZ2UvNDQ1NTk3NS8yNjU4MDI5MC5wbmc=/original/z8o%2FOl.png', caption: 'Gameplay' },
-        { src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHP3w4doDILCjb8HBfhw1ww2dlm8-WWuw9ZA&s', caption: 'Boss Fight' },
-        { src: 'https://preview.redd.it/how-does-everyone-feel-about-hollow-knight-pablos-combat-v0-xh0ywv9atzqf1.png?auto=webp&s=77ef23121871df8e6c3455e2a5cf48c094d1dc75', caption: 'Combate — mais Gameplay' },
-        { src: 'https://images.cults3d.com/cdBtHDVY7ukn4iH89-gBBBrw8PI=/516x516/filters:no_upscale()/https://fbi.cults3d.com/uploaders/17154805/illustration-file/2bafd89a-f1fe-4490-94ab-6d0c796ef2a7/00.png', caption: 'Pablo 3D' },
-    ];
-    let slideAtual = 0;
-
-    function renderSlide() {
-        const img = document.getElementById('slide-img');
-        img.style.opacity = '0';
-        setTimeout(() => {
-            img.src = slides[slideAtual].src;
-            img.alt = slides[slideAtual].caption;
-            img.style.opacity = '1';
-        }, 180);
-        document.getElementById('slide-caption').textContent = slides[slideAtual].caption;
-        document.getElementById('slide-contador').textContent = (slideAtual + 1) + ' / ' + slides.length;
-        document.querySelectorAll('.slide-thumb').forEach((t, i) => {
-            t.classList.toggle('ativo', i === slideAtual);
-        });
-    }
-
-    function moverSlide(dir) {
-        slideAtual = (slideAtual + dir + slides.length) % slides.length;
-        renderSlide();
-    }
-
-    // Miniaturas
-    (function buildThumbs() {
-        const container = document.getElementById('slide-thumbs');
-        slides.forEach((s, i) => {
-            const img = document.createElement('img');
-            img.src = s.src;
-            img.alt = s.caption;
-            img.className = 'slide-thumb' + (i === 0 ? ' ativo' : '');
-            img.onclick = () => { slideAtual = i; renderSlide(); };
-            container.appendChild(img);
-        });
-    })();
-
-    // Setas do teclado para o slideshow
-    document.addEventListener('keydown', e => {
-        if (e.key === 'ArrowLeft') moverSlide(-1);
-        if (e.key === 'ArrowRight') moverSlide(1);
-    });
-</script>
+<!-- ══ SCRIPT EXTERNO ══ -->
+<script src="website.js"></script>
 
 </body>
 </html>

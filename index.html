@@ -461,6 +461,91 @@
             .galeria { grid-template-columns: 1fr 1fr; }
         }
 
+        /* ── Slideshow ── */
+        .slideshow { margin-top: 16px; }
+
+        .slide-display {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            background: #000;
+            border: 4px solid var(--border);
+            box-shadow: 6px 6px 0 #000;
+            overflow: hidden;
+            min-height: 280px;
+        }
+
+        #slide-img {
+            width: 100%;
+            max-height: 420px;
+            object-fit: contain;
+            display: block;
+            border: none;
+            box-shadow: none;
+            margin: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        .slide-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.65);
+            color: var(--neon);
+            border: 2px solid var(--neon);
+            font-size: 1.4rem;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            font-family: var(--font);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
+            z-index: 2;
+        }
+
+        .slide-btn:hover { background: rgba(0,210,255,0.2); }
+        .slide-prev { left: 8px; }
+        .slide-next { right: 8px; }
+
+        .slide-caption-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: rgba(0,0,0,0.4);
+            border: 2px solid var(--border);
+            border-top: none;
+            font-size: 0.78rem;
+        }
+
+        #slide-caption { color: var(--neon); text-transform: uppercase; letter-spacing: 1px; }
+        #slide-contador { color: var(--muted); }
+
+        .slide-thumbs {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+
+        .slide-thumb {
+            width: 72px;
+            height: 52px;
+            object-fit: cover;
+            border: 3px solid var(--border);
+            cursor: pointer;
+            opacity: 0.55;
+            transition: opacity 0.15s, border-color 0.15s;
+        }
+
+        .slide-thumb:hover { opacity: 0.85; border-color: var(--muted); }
+        .slide-thumb.ativo { opacity: 1; border-color: var(--neon); }
+
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { transition: none !important; animation: none !important; }
         }
@@ -494,8 +579,8 @@
         <p>Explore o reino de Hallownest com gráficos retrô de 64 bits. Controle Pablo em uma aventura cheia de insetos poligonais, chefões difíceis e névoas nostálgicas.</p>
         <img
             class="game-img"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf-mey7VfbFu_EK1THZSekSpKfLNE5UYhwAYJLGKFqQIm_tNZBxqLNYuV9&s=10"
-            alt="Capa oficial de Hollow Knight 3: Pablo para Nintendo 64"
+            src="https://preview.redd.it/pablo-album-art-v0-zytgyqz2y8yf1.jpeg?width=1080&crop=smart&auto=webp&s=228464cd4f8d2ca7454959e54d210149cc8eacba"
+            alt="Tela título oficial de Hollow Knight 3: Pablo"
             loading="lazy"
         >
 
@@ -528,29 +613,19 @@
     <!-- Galeria -->
     <section id="galeria">
         <h2>Galeria de Screenshots</h2>
-        <p>Clique em uma imagem para ampliar.</p>
-        <div class="galeria" role="list">
+        <p>Use as setas ou miniaturas para navegar. Clique na imagem para ampliar.</p>
 
-            <div class="galeria-item" role="listitem" onclick="abrirLightbox('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf-mey7VfbFu_EK1THZSekSpKfLNE5UYhwAYJLGKFqQIm_tNZBxqLNYuV9&s=10')" tabindex="0" aria-label="Screenshot 1 - Capa do jogo">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf-mey7VfbFu_EK1THZSekSpKfLNE5UYhwAYJLGKFqQIm_tNZBxqLNYuV9&s=10" alt="Screenshot 1" loading="lazy">
-                <div class="caption">Tela Título</div>
+        <div class="slideshow" role="region" aria-label="Galeria de screenshots">
+            <div class="slide-display">
+                <button class="slide-btn slide-prev" onclick="moverSlide(-1)" aria-label="Imagem anterior">&#8592;</button>
+                <img id="slide-img" src="https://preview.redd.it/pablo-album-art-v0-zytgyqz2y8yf1.jpeg?width=1080&crop=smart&auto=webp&s=228464cd4f8d2ca7454959e54d210149cc8eacba" alt="Tela Título" onclick="abrirLightbox(slides[slideAtual].src)" style="cursor:zoom-in;">
+                <button class="slide-btn slide-next" onclick="moverSlide(1)" aria-label="Próxima imagem">&#8594;</button>
             </div>
-
-            <div class="galeria-item" role="listitem" onclick="abrirLightbox('https://makerworld.bblmw.com/makerworld/model/DSM00000001873782/design/2025-10-10_fd45ec2ef19128.png?x-oss-process=image%2Fresize%2Cw_400%2Fformat%2Cwebp')" tabindex="0" aria-label="Screenshot 2 - Amiibo do Pablo">
-                <img src="https://makerworld.bblmw.com/makerworld/model/DSM00000001873782/design/2025-10-10_fd45ec2ef19128.png?x-oss-process=image%2Fresize%2Cw_400%2Fformat%2Cwebp" alt="Screenshot 2" loading="lazy">
-                <div class="caption">Pablo 3D</div>
+            <div class="slide-caption-bar">
+                <span id="slide-caption">Tela Título</span>
+                <span id="slide-contador">1 / 5</span>
             </div>
-
-            <div class="galeria-item" role="listitem" onclick="abrirLightbox('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf-mey7VfbFu_EK1THZSekSpKfLNE5UYhwAYJLGKFqQIm_tNZBxqLNYuV9&s=10')" tabindex="0" aria-label="Screenshot 3 - Gameplay">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf-mey7VfbFu_EK1THZSekSpKfLNE5UYhwAYJLGKFqQIm_tNZBxqLNYuV9&s=10" alt="Screenshot 3" loading="lazy">
-                <div class="caption">Gameplay</div>
-            </div>
-
-            <div class="galeria-item" role="listitem" onclick="abrirLightbox('https://makerworld.bblmw.com/makerworld/model/DSM00000001873782/design/2025-10-10_fd45ec2ef19128.png?x-oss-process=image%2Fresize%2Cw_400%2Fformat%2Cwebp')" tabindex="0" aria-label="Screenshot 4 - Boss Fight">
-                <img src="https://makerworld.bblmw.com/makerworld/model/DSM00000001873782/design/2025-10-10_fd45ec2ef19128.png?x-oss-process=image%2Fresize%2Cw_400%2Fformat%2Cwebp" alt="Screenshot 4" loading="lazy">
-                <div class="caption">Boss Fight</div>
-            </div>
-
+            <div class="slide-thumbs" id="slide-thumbs"></div>
         </div>
     </section>
 
@@ -559,8 +634,8 @@
         <h2>Amiibo Oficial do Pablo</h2>
         <p>Garanta esta estatueta colecionável de edição limitada! Conecte ao seu controle para desbloquear skins exclusivas e um modo de jogo secreto.</p>
         <img
-            src="https://makerworld.bblmw.com/makerworld/model/DSM00000001873782/design/2025-10-10_fd45ec2ef19128.png?x-oss-process=image%2Fresize%2Cw_400%2Fformat%2Cwebp"
-            alt="Amiibo oficial do Pablo"
+            src="https://images.cults3d.com/cdBtHDVY7ukn4iH89-gBBBrw8PI=/516x516/filters:no_upscale()/https://fbi.cults3d.com/uploaders/17154805/illustration-file/2bafd89a-f1fe-4490-94ab-6d0c796ef2a7/00.png"
+            alt="Amiibo oficial do Pablo — Pablo 3D"
             class="foto-amiibo"
             loading="lazy"
         >
@@ -722,6 +797,55 @@
     function fecharKonami() {
         document.getElementById('konami-msg').style.display = 'none';
     }
+
+    // ── Slideshow ──
+    const slides = [
+        { src: 'https://preview.redd.it/pablo-album-art-v0-zytgyqz2y8yf1.jpeg?width=1080&crop=smart&auto=webp&s=228464cd4f8d2ca7454959e54d210149cc8eacba', caption: 'Tela Título' },
+        { src: 'https://img.itch.zone/aW1hZ2UvNDQ1NTk3NS8yNjU4MDI5MC5wbmc=/original/z8o%2FOl.png', caption: 'Gameplay' },
+        { src: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHP3w4doDILCjb8HBfhw1ww2dlm8-WWuw9ZA&s', caption: 'Boss Fight' },
+        { src: 'https://preview.redd.it/how-does-everyone-feel-about-hollow-knight-pablos-combat-v0-xh0ywv9atzqf1.png?auto=webp&s=77ef23121871df8e6c3455e2a5cf48c094d1dc75', caption: 'Combate — mais Gameplay' },
+        { src: 'https://images.cults3d.com/cdBtHDVY7ukn4iH89-gBBBrw8PI=/516x516/filters:no_upscale()/https://fbi.cults3d.com/uploaders/17154805/illustration-file/2bafd89a-f1fe-4490-94ab-6d0c796ef2a7/00.png', caption: 'Pablo 3D' },
+    ];
+    let slideAtual = 0;
+
+    function renderSlide() {
+        const img = document.getElementById('slide-img');
+        img.style.opacity = '0';
+        setTimeout(() => {
+            img.src = slides[slideAtual].src;
+            img.alt = slides[slideAtual].caption;
+            img.style.opacity = '1';
+        }, 180);
+        document.getElementById('slide-caption').textContent = slides[slideAtual].caption;
+        document.getElementById('slide-contador').textContent = (slideAtual + 1) + ' / ' + slides.length;
+        document.querySelectorAll('.slide-thumb').forEach((t, i) => {
+            t.classList.toggle('ativo', i === slideAtual);
+        });
+    }
+
+    function moverSlide(dir) {
+        slideAtual = (slideAtual + dir + slides.length) % slides.length;
+        renderSlide();
+    }
+
+    // Miniaturas
+    (function buildThumbs() {
+        const container = document.getElementById('slide-thumbs');
+        slides.forEach((s, i) => {
+            const img = document.createElement('img');
+            img.src = s.src;
+            img.alt = s.caption;
+            img.className = 'slide-thumb' + (i === 0 ? ' ativo' : '');
+            img.onclick = () => { slideAtual = i; renderSlide(); };
+            container.appendChild(img);
+        });
+    })();
+
+    // Setas do teclado para o slideshow
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowLeft') moverSlide(-1);
+        if (e.key === 'ArrowRight') moverSlide(1);
+    });
 </script>
 
 </body>

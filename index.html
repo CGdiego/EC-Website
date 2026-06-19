@@ -15,29 +15,38 @@
 
      Parte 2 — Recursos Interativos:
        ✓ IMAGENS: galeria com slideshow de 5 imagens + lightbox
-       ✓ SOM: botão para tocar/pausar trilha sonora
+       ✓ SOM: botão para tocar/pausar trilha sonora + controle de volume
        ✓ VÍDEO: trailer oficial via YouTube embed responsivo
-       ✓ INTERAÇÃO: slideshow com setas, teclado e miniaturas
+       ✓ INTERAÇÃO: slideshow com setas, teclado, miniaturas e autoplay
        ✓ INTERAÇÃO: formulário com validação e feedback visual
-       ✓ INTERAÇÃO: botões de compra com alerta de carrinho
+       ✓ INTERAÇÃO: botões de compra com carrinho funcional + modal
        ✓ INTERAÇÃO: barra de estoque animada via CSS + JS
        ✓ INTERAÇÃO: easter egg Konami Code (↑↑↓↓←→←→BA)
+       ✓ INTERAÇÃO: quiz "Qual inseto poligonal é você?"
+       ✓ INTERAÇÃO: toggle de tema (CRT Verde / Neon Azul)
+       ✓ INTERAÇÃO: botão "voltar ao topo"
+       ✓ INTERAÇÃO: contador de visitas (localStorage removido por restrição de artifacts -> sessionStorage in-memory)
        ✓ ESTÉTICA: scanlines CRT, neon glow, pixel shadows
        ✓ RESPONSIVO: funciona em mobile e desktop
-       ✓ ACESSIBILIDADE: aria-label, roles, teclado navegável
+       ✓ ACESSIBILIDADE: aria-label, roles, teclado navegável, skip link
        ✓ Publicado no GitHub Pages (3 arquivos separados)
      ============================================================ -->
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Hollow Knight 3: Pablo — Edição N64. Projeto acadêmico de página web com tema retrô e recursos interativos.">
     <title>Hollow Knight 3: Pablo — Edição N64</title>
     <link rel="stylesheet" href="website.css">
 </head>
 <body>
 
+<!-- Skip link para acessibilidade -->
+<a href="#informacoes" class="skip-link">Pular para o conteúdo principal</a>
+
 <!-- ══ HEADER ══ -->
 <header>
+    <button id="btn-tema" class="btn-tema" onclick="alternarTema()" aria-label="Alternar tema de cor">🎨 Trocar Tema</button>
     <span class="site-badge">★ Lançamento Exclusivo ★</span>
     <h1>Hollow Knight 3: Pablo</h1>
     <p class="tagline">A jornada mais poligonal e épica de Hallownest!</p>
@@ -47,6 +56,7 @@
             <li><a href="#trailer">Trailer</a></li>
             <li><a href="#galeria">Galeria</a></li>
             <li><a href="#amiibo">Amiibo</a></li>
+            <li><a href="#quiz">Quiz</a></li>
             <li><a href="#compra">Compra</a></li>
             <li><a href="#contato">Contato</a></li>
         </ul>
@@ -54,10 +64,10 @@
 </header>
 
 <!-- ══ MAIN ══ -->
-<main>
+<main id="informacoes">
 
     <!-- Sobre o Jogo -->
-    <section id="informacoes">
+    <section>
         <h2>Sobre o Jogo</h2>
         <p>Explore o reino de Hallownest com gráficos retrô de 64 bits. Controle Pablo em uma aventura cheia de insetos poligonais, chefões difíceis e névoas nostálgicas.</p>
         <img
@@ -68,12 +78,38 @@
         >
 
         <!-- Som ambiente -->
-        <div style="margin-top: 24px;">
-            <p style="font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px;">🎵 Trilha sonora retrô</p>
+        <div class="audio-painel">
+            <p class="audio-label">🎵 Trilha sonora retrô</p>
             <audio id="audio-trilha" loop>
                 <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
             </audio>
-            <button class="btn btn-som" onclick="toggleSom()" id="btn-som-label">▶ Tocar Trilha</button>
+            <div class="audio-controles">
+                <button class="btn btn-som" onclick="toggleSom()" id="btn-som-label" aria-label="Tocar ou pausar trilha sonora">▶ Tocar Trilha</button>
+                <div class="volume-wrapper">
+                    <label for="controle-volume">🔊</label>
+                    <input type="range" id="controle-volume" min="0" max="100" value="60" aria-label="Controle de volume" oninput="ajustarVolume(this.value)">
+                </div>
+            </div>
+        </div>
+
+        <!-- Estatísticas do jogo -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-numero" data-target="42">0</span>
+                <span class="stat-label">Chefões</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-numero" data-target="128">0</span>
+                <span class="stat-label">Insetos Poligonais</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-numero" data-target="9">0</span>
+                <span class="stat-label">Regiões</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-numero" data-target="64">0</span>
+                <span class="stat-label">Bits de Nostalgia</span>
+            </div>
         </div>
     </section>
 
@@ -104,9 +140,10 @@
                 <img id="slide-img"
                     src="https://preview.redd.it/pablo-album-art-v0-zytgyqz2y8yf1.jpeg?width=1080&crop=smart&auto=webp&s=228464cd4f8d2ca7454959e54d210149cc8eacba"
                     alt="Tela Título"
-                    onclick="abrirLightbox(slides[slideAtual].src)"
+                    onclick="abrirLightbox(slides[slideAtual].src, slides[slideAtual].caption)"
                     style="cursor:zoom-in;">
                 <button class="slide-btn slide-next" onclick="moverSlide(1)" aria-label="Próxima imagem">&#8594;</button>
+                <button class="slide-autoplay" id="btn-autoplay" onclick="toggleAutoplay()" aria-label="Ativar ou pausar avanço automático">⏵ Auto</button>
             </div>
             <div class="slide-caption-bar">
                 <span id="slide-caption">Tela Título</span>
@@ -127,7 +164,50 @@
             loading="lazy"
         >
         <p>Por apenas <span class="price-new" style="font-size:1.4rem;">R$ 89,90</span></p>
-        <button class="btn" onclick="comprar('Amiibo do Pablo', 89.90)">Comprar Amiibo</button>
+        <button class="btn" onclick="adicionarCarrinho('Amiibo do Pablo', 89.90)">Adicionar ao Carrinho</button>
+    </section>
+
+    <!-- Quiz -->
+    <section id="quiz">
+        <h2>Qual Inseto Poligonal Você É?</h2>
+        <p>Responda 3 perguntas rápidas e descubra seu inseto interior de Hallownest!</p>
+
+        <div id="quiz-container">
+            <div class="quiz-pergunta" data-pergunta="0">
+                <p class="quiz-texto">1. Como você prefere enfrentar um chefão?</p>
+                <div class="quiz-opcoes">
+                    <button class="quiz-opcao" onclick="responderQuiz(0, 'guerreiro')">Na força bruta, sem medo</button>
+                    <button class="quiz-opcao" onclick="responderQuiz(0, 'estrategista')">Estudando os padrões antes</button>
+                    <button class="quiz-opcao" onclick="responderQuiz(0, 'fujao')">Evitando o combate, se possível</button>
+                </div>
+            </div>
+            <div class="quiz-pergunta oculto" data-pergunta="1">
+                <p class="quiz-texto">2. Qual ambiente de Hallownest te atrai mais?</p>
+                <div class="quiz-opcoes">
+                    <button class="quiz-opcao" onclick="responderQuiz(1, 'guerreiro')">Arena de Combate do Coliseu</button>
+                    <button class="quiz-opcao" onclick="responderQuiz(1, 'estrategista')">Biblioteca Ancestral</button>
+                    <button class="quiz-opcao" onclick="responderQuiz(1, 'fujao')">Cavernas Silenciosas</button>
+                </div>
+            </div>
+            <div class="quiz-pergunta oculto" data-pergunta="2">
+                <p class="quiz-texto">3. Seu item favorito no inventário?</p>
+                <div class="quiz-opcoes">
+                    <button class="quiz-opcao" onclick="responderQuiz(2, 'guerreiro')">Cravo afiado</button>
+                    <button class="quiz-opcao" onclick="responderQuiz(2, 'estrategista')">Amuleto de feitiço</button>
+                    <button class="quiz-opcao" onclick="responderQuiz(2, 'fujao')">Capa de sombras</button>
+                </div>
+            </div>
+            <div class="quiz-resultado oculto" id="quiz-resultado">
+                <h3 id="quiz-resultado-titulo"></h3>
+                <p id="quiz-resultado-texto"></p>
+                <button class="btn btn-som" onclick="reiniciarQuiz()">Refazer Quiz</button>
+            </div>
+            <div class="quiz-progresso">
+                <span class="quiz-dot" data-dot="0"></span>
+                <span class="quiz-dot" data-dot="1"></span>
+                <span class="quiz-dot" data-dot="2"></span>
+            </div>
+        </div>
     </section>
 
     <!-- Compra -->
@@ -146,7 +226,17 @@
         <span class="price-old">De R$ 199,00</span>
         <span class="price-new">R$ 64,00</span>
 
-        <button class="btn" onclick="comprar('Cartucho N64 do Pablo', 64.00)">Comprar Cartucho</button>
+        <button class="btn" onclick="adicionarCarrinho('Cartucho N64 do Pablo', 64.00)">Adicionar ao Carrinho</button>
+
+        <!-- Cupom de desconto -->
+        <div class="cupom-wrapper">
+            <label for="campo-cupom">Tem um cupom?</label>
+            <div class="cupom-form">
+                <input type="text" id="campo-cupom" placeholder="Ex: PABLO10" aria-label="Código do cupom">
+                <button class="btn btn-som" onclick="aplicarCupom()">Aplicar</button>
+            </div>
+            <p id="cupom-msg"></p>
+        </div>
     </section>
 
     <!-- Contato -->
@@ -159,14 +249,18 @@
             <div class="form-group">
                 <label for="campo-nome">Seu nome</label>
                 <input type="text" id="campo-nome" name="nome" placeholder="Ex: Hollow Fan" autocomplete="name">
+                <span class="erro-campo" id="erro-nome"></span>
             </div>
             <div class="form-group">
                 <label for="campo-email">Seu e-mail</label>
                 <input type="email" id="campo-email" name="email" placeholder="voce@email.com" autocomplete="email">
+                <span class="erro-campo" id="erro-email"></span>
             </div>
             <div class="form-group">
                 <label for="campo-msg">Mensagem</label>
-                <textarea id="campo-msg" name="mensagem" placeholder="Escreva aqui..."></textarea>
+                <textarea id="campo-msg" name="mensagem" placeholder="Escreva aqui..." maxlength="300"></textarea>
+                <span class="contador-chars"><span id="contador-msg">0</span>/300</span>
+                <span class="erro-campo" id="erro-msg"></span>
             </div>
             <button type="button" class="btn" onclick="enviarForm()">Enviar Mensagem</button>
         </form>
@@ -181,9 +275,33 @@
     <p style="margin-top: 6px; font-size: 0.75rem; color: #4a5568;">↑↑↓↓←→←→BA — tente isso 😉</p>
 </footer>
 
+<!-- ══ BOTÃO VOLTAR AO TOPO ══ -->
+<button id="btn-topo" onclick="voltarAoTopo()" aria-label="Voltar ao topo da página">↑</button>
+
+<!-- ══ CARRINHO FLUTUANTE ══ -->
+<button id="btn-carrinho" onclick="abrirCarrinho()" aria-label="Abrir carrinho de compras">
+    🛒 <span id="carrinho-contador">0</span>
+</button>
+
+<!-- ══ MODAL CARRINHO ══ -->
+<div id="modal-carrinho" role="dialog" aria-modal="true" aria-label="Carrinho de compras">
+    <div class="modal-conteudo">
+        <button class="modal-fechar" onclick="fecharCarrinho()" aria-label="Fechar carrinho">✕</button>
+        <h2>Seu Carrinho</h2>
+        <div id="carrinho-itens"></div>
+        <p id="carrinho-vazio">Seu carrinho está vazio. Que tal adicionar um Amiibo? 🐛</p>
+        <div class="carrinho-total">
+            <span>Total:</span>
+            <span id="carrinho-total-valor">R$ 0,00</span>
+        </div>
+        <button class="btn" onclick="finalizarCompra()" id="btn-finalizar">Finalizar Compra</button>
+    </div>
+</div>
+
 <!-- ══ LIGHTBOX ══ -->
 <div id="lightbox" role="dialog" aria-modal="true" aria-label="Imagem ampliada" onclick="fecharLightbox()">
     <img id="lightbox-img" src="" alt="Imagem ampliada">
+    <p id="lightbox-caption"></p>
     <button id="lightbox-fechar" onclick="fecharLightbox()">✕ Fechar</button>
 </div>
 
@@ -193,6 +311,9 @@
     <p style="color: var(--muted); font-size: 0.85rem; margin-bottom: 20px;">Você desbloqueou o Pablo Dourado.<br>Modo lendário disponível no cartucho.</p>
     <button id="konami-fechar" onclick="fecharKonami()">OK, incrível!</button>
 </div>
+
+<!-- ══ TOAST DE NOTIFICAÇÃO ══ -->
+<div id="toast" role="status" aria-live="polite"></div>
 
 <!-- ══ SCRIPT EXTERNO ══ -->
 <script src="website.js"></script>
